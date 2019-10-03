@@ -24,10 +24,8 @@ import psutil as ps
 
 ps_v1_api = int(ps.__version__.split('.')[0]) <= 1
 
-
 B_UNITS = ['', 'KB', 'MB', 'GB', 'TB']
 cpu_load = []
-
 
 def bytes_to_human(num, suffix='B'):
     for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
@@ -38,10 +36,8 @@ def bytes_to_human(num, suffix='B'):
 
 class ISMError(Exception):
     """General exception."""
-
     def __init__(self, msg):
         Exception.__init__(self, msg)
-
 
 class SensorManager(object):
     """Singleton"""
@@ -329,6 +325,19 @@ class BaseSensor(object):
 
         return output.decode('utf-8') if output else _("(no output)")
 
+class NvTx2GPUSensor(BaseSensor):
+    name = 'tx2gpu'
+    desc = _('Nvidia TX2 GPU utilization')
+
+    def get_value(self, sensor):
+        if sensor == 'tx2gpu':
+            return "{:02.0f}%".format(self._fetch_gpu())
+
+    def _fetch_gpu(self, gpuLoadFile="/sys/devices/gpu.0/load", percpu=False):
+        with open(gpuLoadFile, 'r') as gpuFile:
+            load = gpuFile.read()
+        perc = int(load)/10.0
+        return int(perc)
 
 class NvGPUSensor(BaseSensor):
     name = 'nvgpu'
