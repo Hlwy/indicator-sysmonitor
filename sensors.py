@@ -62,6 +62,7 @@ class SensorManager(object):
         def __init__(self):
             self.sensor_instances = [CPUSensor(),
                                      NvGPUSensor(),
+                                     NvTx2GPUSensor(),
                                      MemSensor(),
                                      NetSensor(),
                                      BatSensor(),
